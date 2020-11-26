@@ -1,0 +1,98 @@
+package com.hsrw.pds_practice01;
+import java.util.*;
+import java.io.*;
+import java.net.*;
+
+public class Main {
+
+    public static void main(String[] args) throws IOException {
+        ServerSocket ss = new ServerSocket(1234);
+        System.out.println("Server is waiting for a connection");
+        Socket connection = ss.accept();
+        System.out.println("Connection established with client: "+connection);
+
+        DataInputStream input = new DataInputStream(new BufferedInputStream(connection.getInputStream()));
+        DataOutputStream output = new DataOutputStream(new BufferedOutputStream(connection.getOutputStream()));
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        HashMap<String,String> users = new HashMap<String, String>();
+
+        boolean logged_in=false;
+        boolean cont = true;
+
+        output.writeUTF("Welcome\n");
+
+        while(cont=true){
+            output.writeUTF("Please choose one of the functionalities:\n1.Register     2.Log In     3.Join Team     4.Play Game");
+            output.flush();
+            int func = input.readInt();
+
+            switch (func){
+                case 1:
+                    String request_username="Please enter your desired username: ";
+                    output.writeUTF(request_username);
+                    output.flush();
+                    String username=input.readUTF();
+                    System.out.println("User gave this username: "+username);
+
+
+                    String request_password="Please enter your desired password: ";
+                    output.writeUTF(request_password);
+                    output.flush();
+                    String password=input.readUTF();
+                    System.out.println("User registered with password: "+password);
+                    users.put(username,password);
+
+                    output.writeUTF("You are now registered! ");
+                    output.flush();
+
+
+                    break;
+                case 2:
+                    if (logged_in) output.writeUTF("y");
+                    else {output.writeUTF("n");
+                    output.writeUTF("Enter your username: ");
+                    output.flush();
+                    String given_username = input.readUTF();
+
+
+                    output.writeUTF("Enter your password: ");
+                    output.flush();
+                    String given_password = input.readUTF();
+
+
+                    boolean user_ok=false;
+                    boolean pass_ok=false;
+
+                    for (String i:users.keySet()){
+                        if (given_username.equals(i) && given_password.equals(users.get(i))) logged_in = true;
+                        System.out.println(i+", "+users.get(i)); System.out.println(logged_in);
+                    }
+                    System.out.println(logged_in);
+                    if (logged_in==true){output.writeUTF("You are now logged in, and may continue to play the game.");}
+                    else {output.writeUTF("Wrong credentials. Please try to login again.");}
+
+
+
+
+                    break;}
+                case 3: System.out.println("User wants to join team"); break;
+                case 4: System.out.println("User wants to play game"); break;
+                default: System.out.println("User entered invalid function");
+            }
+        }
+
+
+
+
+        input.close();
+        output.close();
+        connection.close();
+        ss.close();
+
+
+
+    }
+
+}
