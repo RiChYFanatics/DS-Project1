@@ -1,0 +1,31 @@
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+public class Thread_Handler {
+    public static void main (String [] args) throws IOException{
+        ServerSocket ss = new ServerSocket(1234);
+        while (true){
+        Socket s = null;
+            try{
+        Socket connection = ss.accept();
+        System.out.println("Client connected");
+        DataInputStream input = new DataInputStream(new BufferedInputStream(connection.getInputStream()));
+        DataOutputStream output = new DataOutputStream(new BufferedOutputStream(connection.getOutputStream()));
+        System.out.println("Giving new thread to this client");
+        Thread t = new Server(connection,input,output);
+        t.start();
+        
+    }
+        catch(Exception e){
+            s.close();
+            System.out.println("The server encountered an error");
+            
+        
+    }
+        
+    
+    
+  }
+}
+}
