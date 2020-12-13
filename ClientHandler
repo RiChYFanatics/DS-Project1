@@ -1,0 +1,135 @@
+package com.hsrw.pds_practice01;
+
+import java.util.*;
+import java.io.*;
+import java.net.*;
+
+class ClientHandler extends Thread {
+
+
+    final DataInputStream input;
+    final DataOutputStream output;
+    final Socket connection;
+    public Db db;
+    public Player player;
+
+    public ClientHandler(Socket connection, DataInputStream input, DataOutputStream output, Db db,Player player) {
+        this.connection=connection;
+        this.input=input;
+        this.output=output;
+        this.db = db;
+        this.player=player;
+
+    }
+    public void run() {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        boolean logged_in=false;
+        boolean cont = true;
+        String user = "";
+
+        try {
+            output.writeUTF("Welcome\n");
+
+            while(cont){
+                output.writeUTF("Please choose one of the functionalities:\n1.Register     2.Log In     3.Join Team     4.Play Game");
+                output.flush();
+                int func = input.readInt();
+
+                switch (func){
+                    case 1:
+                        String request_username="Please enter your desired username: ";
+                        output.writeUTF(request_username);
+                        output.flush();
+                        String username=input.readUTF();
+                        System.out.println("User gave this username: "+username);
+
+
+
+                        String request_password="Please enter your desired password: ";
+                        output.writeUTF(request_password);
+                        output.flush();
+                        String password=input.readUTF();
+                        System.out.println("User registered with password: "+password);
+
+                        db.registered.put(username,password);
+
+                        output.writeUTF("You are now registered! Please proceed to login in order to play the game. ");
+                        output.flush();
+
+
+
+
+                        break;
+                    case 2: {
+                        if (logged_in) {
+                            output.writeUTF("y");
+                        } else {
+                            output.writeUTF("n");
+                            output.writeUTF("Enter your username: ");
+                            output.flush();
+                            String given_username = input.readUTF();
+
+                            output.writeUTF("Enter your password: ");
+                            output.flush();
+                            String given_password = input.readUTF();
+
+                            if (db.registered.containsKey(given_username)) {
+                                String upass = db.registered.get(given_username);
+
+                                if (upass.equals(given_password)) {
+                                    System.out.println("Correct.");
+                                    output.writeUTF("You are now logged in, and may continue to play the game.");
+                                    output.flush();
+                                    logged_in = true;
+                                    user = given_username;
+                                } else {
+                                    System.out.println("Wrong credentials");
+                                    output.writeUTF("Wrong credentials. Please try to login again.");
+                                }
+                            } else {
+                                // output.writeUTF (do this)
+                                System.out.println("You are not registered.");
+                            }
+
+                            break;
+                        }
+                    }
+                    case 3:
+                        if (logged_in) {output.writeUTF("y");
+                        output.flush();
+                        output.writeUTF("Waiting for another player to join");
+                        output.flush();
+                        db.quePlayer(player);
+                        Team teamcreated = db.createTeam();
+                        output.writeUTF("Team created, you may now proceed to play the game.");
+                        output.flush();
+                            if (input.readUTF().equals("y")){
+                                func = 4;
+                            }
+
+
+                        }
+                        else {output.writeUTF("n");break;}
+
+                    case 4: System.out.println("User wants to play game"); break;
+                    default: System.out.println("User entered invalid function");
+                }
+            }
+        }
+        catch (IOException | InterruptedException e){System.out.println("Error");}
+
+
+        try{
+
+            input.close();
+            output.close();
+            connection.close();
+        }
+        catch(IOException e){System.out.println("Error");}
+
+
+
+
+    }
+}
