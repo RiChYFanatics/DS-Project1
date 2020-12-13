@@ -1,0 +1,38 @@
+package com.hsrw.pds_practice01;
+
+
+import java.io.*;
+import java.lang.reflect.Array;
+import java.net.*;
+import java.util.*;
+import java.util.Stack;
+
+class Thread_Handler {
+
+
+    public static void main (String [] args) throws IOException{
+        ServerSocket ss = new ServerSocket(1234);
+        Stack lobby = new Stack();
+
+        Db db = new Db();
+
+        while (true){
+            try {
+                Socket connection = ss.accept();
+                System.out.println("Client connected");
+                String ID = UUID.randomUUID().toString();
+                boolean ready=false;
+                Player player = new Player(connection,ID);
+                DataInputStream input = new DataInputStream(new BufferedInputStream(connection.getInputStream()));
+                DataOutputStream output = new DataOutputStream(new BufferedOutputStream(connection.getOutputStream()));
+                System.out.println("Giving new thread to this client");
+
+                Thread t = new ClientHandler(connection, input, output, db,player);
+                t.start();
+            } catch(Exception e){
+                ss.close();
+                System.out.println("The server encountered an error");
+            }
+        }
+    }
+}
