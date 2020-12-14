@@ -1,8 +1,6 @@
 package com.hsrw.pds_practice01;
 
-
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.*;
 import java.util.*;
 import java.util.Stack;
@@ -12,7 +10,6 @@ class Thread_Handler {
 
     public static void main (String [] args) throws IOException{
         ServerSocket ss = new ServerSocket(1234);
-        Stack lobby = new Stack();
 
         Db db = new Db();
 
@@ -22,7 +19,7 @@ class Thread_Handler {
                 System.out.println("Client connected");
                 String ID = UUID.randomUUID().toString();
                 boolean ready=false;
-                Player player = new Player(connection,ID);
+                Player player = new Player(connection,ID,ready);
                 DataInputStream input = new DataInputStream(new BufferedInputStream(connection.getInputStream()));
                 DataOutputStream output = new DataOutputStream(new BufferedOutputStream(connection.getOutputStream()));
                 System.out.println("Giving new thread to this client");
