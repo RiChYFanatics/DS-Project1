@@ -1,16 +1,15 @@
 package com.hsrw.pds_practice01;
 
-
 import java.net.Socket;
 
-
 public class Player {
-    public Socket s;
-    public String Username;
+    public static Socket s;
+    public static String Username;
+    public static Boolean ready;
 
-    public Player(Socket s, String user){
+    public Player(Socket s, String user, Boolean ready){
         this.s=s;
         this.Username=user;
+        this.ready=ready;
     }
-
 }
