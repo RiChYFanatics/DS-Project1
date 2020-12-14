@@ -15,7 +15,9 @@ public class Main {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             boolean cont = true;
             String userid;
-
+            int kot = 0;
+            int loop=0;
+            int user_ready = 0;
             System.out.println(input.readUTF());
 
             while(cont == true){
@@ -40,8 +42,6 @@ public class Main {
 
                         System.out.println(input.readUTF()); break;
 
-
-
                     case 2:
                         if (input.readUTF().equals("y")){
                             System.out.println("You are already logged in!");
@@ -61,22 +61,29 @@ public class Main {
 
                     case 3:
 
-
                         if (input.readUTF().equals("y")){
                             System.out.println(input.readUTF());
                             System.out.println(input.readUTF());
-                            System.out.println("Press 1 to confirm that you are ready to start the game.");
-                            if(Integer.parseInt(br.readLine())==1){
-                                func = 4;
-                                output.writeUTF("y");
+                            System.out.println("Press 1 when you are ready to start the game.");
+                            while(loop==0){
+                                user_ready= Integer.parseInt(br.readLine());
+                              if (user_ready==1){
+                                  break;
+                              }
+                              System.out.println(loop);
                             }
+                            output.writeUTF("y");
+                            output.flush();
+                            System.out.println(input.readUTF());
+
                         }
                         else{System.out.println("Please log in first!");break;}
 
                     case 4:
-                        System.out.println("Case 4");
-
-
+                        System.out.println(input.readUTF());
+                        System.out.println(input.readUTF());
+                        System.out.println(input.readUTF());
+                        System.out.println(input.readUTF());
 
                     default:
                         throw new IllegalStateException("Unexpected value: " + func);
