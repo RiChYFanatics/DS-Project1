@@ -1,30 +1,34 @@
 package com.hsrw.pds_practice01;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Stack;
-import java.net.*;
-import java.io.*;
+import java.util.LinkedList;
 
 public class Db {
     LinkedHashMap<String, String> registered = new LinkedHashMap<>();
-    Stack<Player> userslist = new Stack<Player>();
+    LinkedList<Player> userslist = new LinkedList<>();
     int count = 0;
+    int index=0;
 
     public void quePlayer (Player player) {
             count+=1;
-            userslist.push(player);
+            userslist.add(player);
 
     }
     public Team createTeam() throws InterruptedException {
         while(count<2){
             Thread.sleep(1000);
         }
-        Player p1=userslist.pop();
-        Player p2=userslist.pop();
+        Player p1=userslist.get(index);
+        System.out.println(index);
+        Player p2=userslist.get((index)+1);
         Team team = new Team(p1,p2);
-        count = 0;
+
         return team;
+    }
+    public void Listindex(){
+        count = 0;
+        index+=1;
+
     }
 
 }
