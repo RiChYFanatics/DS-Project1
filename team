@@ -8,5 +8,11 @@ public class Team {
         this.p1 = p1;
         this.p2 = p2;
     }
-
+    public static void playersReady() throws InterruptedException {
+        while (p1.ready && p2.ready){
+            Thread.sleep(1000);
+            System.out.println(p1.ready);
+            System.out.println(p2.ready+" 2");
+        }
+    }
 }
