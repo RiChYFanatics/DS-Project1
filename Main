@@ -1,34 +1,38 @@
-package com.hsrw.pds_practice01;
+package com.company;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.Stack;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.UUID;
 
 class Thread_Handler {
+    Thread_Handler() {
+    }
 
-
-    public static void main (String [] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         ServerSocket ss = new ServerSocket(1234);
+        com.company.Db db = new com.company.Db();
 
-        Db db = new Db();
-
-        while (true){
-            try {
-                Socket connection = ss.accept();
-                System.out.println("Client connected");
-                String ID = UUID.randomUUID().toString();
-                boolean ready=false;
-                Player player = new Player(connection,ID,ready);
-                DataInputStream input = new DataInputStream(new BufferedInputStream(connection.getInputStream()));
-                DataOutputStream output = new DataOutputStream(new BufferedOutputStream(connection.getOutputStream()));
-                System.out.println("Giving new thread to this client");
-
-                Thread t = new ClientHandler(connection, input, output, db,player);
-                t.start();
-            } catch(Exception e){
-                ss.close();
-                System.out.println("The server encountered an error");
+        while(true) {
+            while(true) {
+                try {
+                    System.out.println("Waiting for client connection ...");
+                    Socket connection = ss.accept();
+                    System.out.println("Client connected");
+                    String ID = UUID.randomUUID().toString();
+                    com.company.Player player = new com.company.Player(connection, ID);
+                    DataInputStream input = new DataInputStream(new BufferedInputStream(connection.getInputStream()));
+                    DataOutputStream output = new DataOutputStream(new BufferedOutputStream(connection.getOutputStream()));
+                    Thread t = new com.company.ClientHandler(connection, input, output, db, player);
+                    t.start();
+                } catch (Exception var9) {
+                    ss.close();
+                    System.out.println("The server encountered an error");
+                }
             }
         }
     }
