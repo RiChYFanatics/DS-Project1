@@ -1,18 +1,30 @@
-package com.hsrw.pds_practice01;
+package com.company;
+
+
+import java.util.Random;
 
 public class Team {
-    public static Player p1;
-    public static Player p2;
+    public com.company.Player p1;
+    public com.company.Player p2;
 
-    public Team (Player p1, Player p2) {
+    public Team(com.company.Player p1, com.company.Player p2) {
         this.p1 = p1;
         this.p2 = p2;
     }
-    public static void playersReady() throws InterruptedException {
-        while (p1.ready && p2.ready){
-            Thread.sleep(1000);
-            System.out.println(p1.ready);
-            System.out.println(p2.ready+" 2");
+
+    public void playersReady() throws InterruptedException {
+        while(!this.p1.ready || !this.p2.ready) {
+            Thread.sleep(1000L);
         }
+
+    }
+    public boolean goFirst (Player player){
+        /* String [] IDs = {p1.ID, p2.ID};
+        int idx = new Random().nextInt(IDs.length);
+        String random = (IDs [idx]); */
+        if (player.ID == p1.ID){
+            return true;
+        }
+        else return false;
     }
 }
