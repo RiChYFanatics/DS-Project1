@@ -1,34 +1,36 @@
-package com.hsrw.pds_practice01;
+package com.company;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class Db {
-    LinkedHashMap<String, String> registered = new LinkedHashMap<>();
-    LinkedList<Player> userslist = new LinkedList<>();
+    LinkedHashMap<String, String> registered = new LinkedHashMap();
+    LinkedList<Player> userslist = new LinkedList();
     int count = 0;
-    int index=0;
+    int index = 0;
 
-    public void quePlayer (Player player) {
-            count+=1;
-            userslist.add(player);
-
+    public Db() {
     }
-    public Team createTeam() throws InterruptedException {
-        while(count<2){
-            Thread.sleep(1000);
-        }
-        Player p1=userslist.get(index);
-        System.out.println(index);
-        Player p2=userslist.get((index)+1);
-        Team team = new Team(p1,p2);
 
+    public void quePlayer(Player player) {
+        ++this.count;
+        this.userslist.add(player);
+    }
+
+    public Team createTeam() throws InterruptedException {
+        while(this.count < 2) {
+            Thread.sleep(1000L);
+        }
+
+        Player p1 = (Player)this.userslist.get(this.index);
+        Player p2 = (Player)this.userslist.get(this.index + 1);
+        Team team = new Team(p1, p2);
         return team;
     }
-    public void Listindex(){
-        count = 0;
-        index+=1;
 
+
+    public void Listindex() {
+        this.count = 0;
+        ++this.index;
     }
-
 }
