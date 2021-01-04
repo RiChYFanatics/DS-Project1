@@ -7,6 +7,7 @@ public class Player {
     public String ID;
     public boolean ready = false;
     public boolean finished = false;
+    public boolean correct = false;
 
     public Player(Socket s, String user) {
         this.s = s;
