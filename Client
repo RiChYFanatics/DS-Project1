@@ -1,12 +1,6 @@
 package com.company;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Socket;
 
 class Client {
@@ -20,11 +14,12 @@ class Client {
             DataOutputStream output = new DataOutputStream(new BufferedOutputStream(connection.getOutputStream()));
             DataInputStream input = new DataInputStream(new BufferedInputStream(connection.getInputStream()));
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            InputStream is = connection.getInputStream();
+            ObjectInputStream ois = new ObjectInputStream(is);
             boolean cont = true;
-            int loop = 0;
             System.out.println(input.readUTF());
 
-            while(cont) {
+            while(cont == true) {
                 String intro = input.readUTF();
                 System.out.println(intro);
                 int func = Integer.parseInt(br.readLine());
@@ -66,13 +61,12 @@ class Client {
                             System.out.println(input.readUTF());
                             System.out.println("Press 1 when you are ready to start the game.");
 
-                            while(loop == 0) {
+                            while(true) {
                                 int user_ready = Integer.parseInt(br.readLine());
                                 if (user_ready == 1) {
                                     break;
                                 }
 
-                                System.out.println(loop);
                             }
 
                             System.out.println("Waiting for the other player to be ready.");
@@ -88,27 +82,30 @@ class Client {
                                 String text1 = br.readLine();
                                 output.writeUTF(text1);
                                 output.flush();
+                                System.out.println("Waiting for the other player to finish.");
+                                System.out.println(ois.readObject());
+
                             }
                             if (input.readUTF().equals("n")) {
+                                System.out.println("Other player is typing, be ready to start.");
                                 System.out.println(input.readUTF());
-                                System.out.println(input.readUTF());
-                                System.out.println("check 1");
                                 String text2 = br.readLine();
-                                System.out.println("check 2");
                                 output.writeUTF(text2);
                                 output.flush();
-                                System.out.println("check 3");
+                                System.out.println(ois.readObject());
                             }
+                            System.out.println(input.readUTF());break;
                         }
                     default:
-                        throw new IllegalStateException("Unexpected value: " + func);
+                        throw new IllegalStateException("Invalid function: " + func);
                 }
+
             }
 
             connection.close();
             input.close();
             output.close();
-        } catch (IOException var16) {
+        } catch (IOException | ClassNotFoundException var16) {
             System.out.println(var16.getMessage());
         }
     }
