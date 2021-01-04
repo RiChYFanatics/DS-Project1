@@ -1,13 +1,16 @@
 package com.company;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class Db {
-    LinkedHashMap<String, String> registered = new LinkedHashMap();
-    LinkedList<Player> userslist = new LinkedList();
-    int count = 0;
+    LinkedHashMap<String, String> registered = new LinkedHashMap(); //hashmap with the user/pass combos of users
+    LinkedList<Player> userslist = new LinkedList(); //list of players waiting to join a team
+    int count = 0; //count of players that are waiting to join a team
     int index = 0;
+    public LinkedList <Double> timelist= new LinkedList<> (); //temporary
+    LinkedList<Double> recordBoard = new LinkedList (); //leaderboard
 
     public Db() {
     }
@@ -28,9 +31,30 @@ public class Db {
         return team;
     }
 
-
     public void Listindex() {
         this.count = 0;
         ++this.index;
     }
+
+    public void sortBoard(){
+        Collections.sort(recordBoard);
+    }
+
+    public void playerTime (double t){
+        timelist.add(t);
+    }
+    public double teamTime (){
+        double t1 = timelist.get(0);
+        double t2 = timelist.get(1);
+        double total = t1+t2;
+        return total;
+
+    }
+
+    public void removeTime (){
+        timelist.remove(0);
+        timelist.remove(0);
+    }
+
+
 }
