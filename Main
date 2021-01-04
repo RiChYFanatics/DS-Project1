@@ -1,60 +1,35 @@
 package com.company;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.UUID;
 
-public class Db {
-    LinkedHashMap<String, String> registered = new LinkedHashMap(); //hashmap with the user/pass combos of users
-    LinkedList<Player> userslist = new LinkedList(); //list of players waiting to join a team
-    int count = 0; //count of players that are waiting to join a team
-    int index = 0;
-    public LinkedList <Double> timelist= new LinkedList<> (); //temporary
-    LinkedList<Double> recordBoard = new LinkedList (); //leaderboard
-
-    public Db() {
+class Thread_Handler {
+    Thread_Handler() {
     }
 
-    public void quePlayer(Player player) {
-        ++this.count;
-        this.userslist.add(player);
-    }
+    public static void main(String[] args) throws IOException {
+        ServerSocket ss = new ServerSocket(1234);
+        com.company.Db db = new com.company.Db();
 
-    public Team createTeam() throws InterruptedException {
-        while(this.count < 2) {
-            Thread.sleep(1000L);
+        while(true) {
+            while(true) {
+                try {
+                    System.out.println("Waiting for client connection ...");
+                    Socket connection = ss.accept();
+                    System.out.println("Client connected");
+                    String ID = UUID.randomUUID().toString();
+                    com.company.Player player = new com.company.Player(connection, ID);
+                    DataInputStream input = new DataInputStream(new BufferedInputStream(connection.getInputStream()));
+                    DataOutputStream output = new DataOutputStream(new BufferedOutputStream(connection.getOutputStream()));
+                    Thread t = new com.company.ClientHandler(connection, input, output, db, player);
+                    t.start();
+                } catch (Exception var9) {
+                    ss.close();
+                    System.out.println("The server encountered an error");
+                }
+            }
         }
-
-        Player p1 = (Player)this.userslist.get(this.index);
-        Player p2 = (Player)this.userslist.get(this.index + 1);
-        Team team = new Team(p1, p2);
-        return team;
     }
-
-    public void Listindex() {
-        this.count = 0;
-        ++this.index;
-    }
-
-    public void sortBoard(){
-        Collections.sort(recordBoard);
-    }
-
-    public void playerTime (double t){
-        timelist.add(t);
-    }
-    public double teamTime (){
-        double t1 = timelist.get(0);
-        double t2 = timelist.get(1);
-        double total = t1+t2;
-        return total;
-
-    }
-
-    public void removeTime (){
-        timelist.remove(0);
-        timelist.remove(0);
-    }
-
-
 }
