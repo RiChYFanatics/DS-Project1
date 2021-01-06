@@ -1,4 +1,4 @@
-package com.company;
+package com.company; //rei
 
 
 import java.lang.reflect.Array;
@@ -15,15 +15,12 @@ public class Team {
     }
 
     public void playersReady() throws InterruptedException {
-        while(!this.p1.ready || !this.p2.ready) {
+        while(!this.p1.ready || !this.p2.ready) { //put thread to sleep until both players are ready
             Thread.sleep(1000L);
         }
 
     }
-    public boolean goFirst (Player player){
-        /* String [] IDs = {p1.ID, p2.ID};
-        int idx = new Random().nextInt(IDs.length);
-        String random = (IDs [idx]); */
+    public boolean goFirst (Player player){ //chooses which player goes first
         if (player.ID == p1.ID){
             return true;
         }
